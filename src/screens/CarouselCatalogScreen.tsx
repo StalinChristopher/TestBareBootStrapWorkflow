@@ -1,25 +1,25 @@
-import type { DrawerScreenProps } from "@react-navigation/drawer";
-import React, { useCallback, useMemo } from "react";
-import { useTranslation } from "react-i18next";
-import { ScrollView, useWindowDimensions, View } from "react-native";
-import type { PanGesture } from "react-native-gesture-handler";
-import Carousel, { Pagination } from "react-native-reanimated-carousel";
-import { useSharedValue } from "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
+import type { DrawerScreenProps } from '@react-navigation/drawer';
+import React, { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ScrollView, useWindowDimensions, View } from 'react-native';
+import type { PanGesture } from 'react-native-gesture-handler';
+import Carousel, { Pagination } from 'react-native-reanimated-carousel';
+import { useSharedValue } from 'react-native-reanimated';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AppText } from "../components/AppText";
-import { TopBar } from "../components/TopBar";
-import { BorderRadiusToken } from "../designSystem/generated/borderRadius";
-import { FontSizeToken } from "../designSystem/generated/fontSize";
-import { LineHeightToken } from "../designSystem/generated/lineHeight";
-import { SpacingToken } from "../designSystem/generated/spacing";
-import type { DrawerParamList } from "../navigation/types";
-import { useAppTheme } from "../theme/ThemeContext";
-import { useThemedStyles } from "../theme/useThemedStyles";
+import { AppText } from '../components/AppText';
+import { TopBar } from '../components/TopBar';
+import { BorderRadiusToken } from '../designSystem/generated/borderRadius';
+import { FontSizeToken } from '../designSystem/generated/fontSize';
+import { LineHeightToken } from '../designSystem/generated/lineHeight';
+import { SpacingToken } from '../designSystem/generated/spacing';
+import type { DrawerParamList } from '../navigation/types';
+import { useAppTheme } from '../theme/ThemeContext';
+import { useThemedStyles } from '../theme/useThemedStyles';
 
 type CarouselCatalogNavProps = DrawerScreenProps<
   DrawerParamList,
-  "CarouselCatalog"
+  'CarouselCatalog'
 >;
 
 const SLIDE_INDICES = [0, 1, 2, 3, 4] as const;
@@ -58,22 +58,22 @@ function CarouselSlide({ index }: CarouselSlideProps) {
         flex: 1,
         borderRadius: BorderRadiusToken.xl,
         marginHorizontal: SpacingToken.spacing_value_2,
-        alignItems: "center",
-        justifyContent: "center",
+        alignItems: 'center',
+        justifyContent: 'center',
         padding: SpacingToken.spacing_value_4,
       },
       slideText: {
         fontSize: FontSizeToken.body_lg,
         lineHeight: LineHeightToken.body_lg,
-        fontWeight: "600",
-        textAlign: "center",
+        fontWeight: '600',
+        textAlign: 'center',
       },
       slideHint: {
         marginTop: SpacingToken.spacing_value_2,
         fontSize: FontSizeToken.label_md,
         lineHeight: LineHeightToken.label_md,
         opacity: 0.9,
-        textAlign: "center",
+        textAlign: 'center',
       },
     }),
     [],
@@ -98,26 +98,15 @@ function CarouselSlide({ index }: CarouselSlideProps) {
     index,
   ]);
 
-  const textColor = index % 4 === 3 ? "text1" : "textOnPrimary";
+  const textColor = index % 4 === 3 ? 'text1' : 'textOnPrimary';
 
   return (
-    <View
-      style={[styles.slide, { backgroundColor }]}
-      accessibilityRole="none"
-    >
-      <AppText
-        variant="bodyLg"
-        color={textColor}
-        style={styles.slideText}
-      >
-        {t("carouselCatalog.slideTitle", { n: index + 1 })}
+    <View style={[styles.slide, { backgroundColor }]} accessibilityRole="none">
+      <AppText variant="bodyLg" color={textColor} style={styles.slideText}>
+        {t('carouselCatalog.slideTitle', { n: index + 1 })}
       </AppText>
-      <AppText
-        variant="label"
-        color={textColor}
-        style={styles.slideHint}
-      >
-        {t("carouselCatalog.swipeHint")}
+      <AppText variant="label" color={textColor} style={styles.slideHint}>
+        {t('carouselCatalog.swipeHint')}
       </AppText>
     </View>
   );
@@ -127,15 +116,13 @@ function CarouselSlide({ index }: CarouselSlideProps) {
  * Drawer catalog demonstrating common `react-native-reanimated-carousel` layouts
  * (full-width, peek lane, parallax, stack, vertical) plus basic dot pagination.
  */
-export function CarouselCatalogScreen({
-  navigation,
-}: CarouselCatalogNavProps) {
+export function CarouselCatalogScreen({ navigation }: CarouselCatalogNavProps) {
   const { t } = useTranslation();
   const { width: windowWidth } = useWindowDimensions();
   const paginationProgress = useSharedValue(0);
 
   const styles = useThemedStyles(
-    (colors) => ({
+    colors => ({
       safe: {
         flex: 1,
         backgroundColor: colors.background,
@@ -152,7 +139,7 @@ export function CarouselCatalogScreen({
       sectionTitle: {
         fontSize: FontSizeToken.body_lg,
         lineHeight: LineHeightToken.body_lg,
-        fontWeight: "600",
+        fontWeight: '600',
         color: colors.text1,
         marginBottom: SpacingToken.spacing_value_2,
       },
@@ -163,14 +150,14 @@ export function CarouselCatalogScreen({
         marginBottom: SpacingToken.spacing_value_3,
       },
       carouselHost: {
-        alignItems: "center",
+        alignItems: 'center',
       },
       sectionHint: {
         marginTop: SpacingToken.spacing_value_3,
         fontSize: FontSizeToken.label_md,
         lineHeight: LineHeightToken.label_md,
         color: colors.text3,
-        textAlign: "center",
+        textAlign: 'center',
       },
       paginationContainer: {
         gap: SpacingToken.spacing_value_2,
@@ -210,9 +197,9 @@ export function CarouselCatalogScreen({
   const carouselData = useMemo(() => [...SLIDE_INDICES], []);
 
   return (
-    <SafeAreaView style={styles.safe} edges={["bottom", "left", "right"]}>
+    <SafeAreaView style={styles.safe} edges={['bottom', 'left', 'right']}>
       <TopBar
-        topBarTitle={t("carouselCatalog.screenTitle")}
+        topBarTitle={t('carouselCatalog.screenTitle')}
         onBackPress={() => navigation.goBack()}
       />
       <ScrollView
@@ -221,143 +208,149 @@ export function CarouselCatalogScreen({
         showsVerticalScrollIndicator={false}
       >
         <View>
-            <AppText variant="bodyLg" color="text1" style={styles.sectionTitle}>
-              {t("carouselCatalog.sectionFullWidth")}
-            </AppText>
-            <AppText variant="bodySm" color="text2" style={styles.caption}>
-              {t("carouselCatalog.sectionFullWidthCaption")}
-            </AppText>
-            <View
-              style={styles.carouselHost}
-              accessibilityRole="none"
-              accessibilityLabel={t("carouselCatalog.a11yFullWidth")}
-            >
-              <Carousel
-                width={fullWidth}
-                height={heightFull}
-                data={carouselData}
-                loop
-                onProgressChange={paginationProgress}
-                onConfigurePanGesture={configureHorizontalCarouselPan}
-                renderItem={renderItem}
-              />
-            </View>
-            <Pagination.Basic
-              progress={paginationProgress}
+          <AppText variant="bodyLg" color="text1" style={styles.sectionTitle}>
+            {t('carouselCatalog.sectionFullWidth')}
+          </AppText>
+          <AppText variant="bodySm" color="text2" style={styles.caption}>
+            {t('carouselCatalog.sectionFullWidthCaption')}
+          </AppText>
+          <View
+            style={styles.carouselHost}
+            accessibilityRole="none"
+            accessibilityLabel={t('carouselCatalog.a11yFullWidth')}
+          >
+            <Carousel
+              width={fullWidth}
+              height={heightFull}
               data={carouselData}
-              horizontal
-              containerStyle={styles.paginationContainer}
-              dotStyle={styles.paginationDot}
-              activeDotStyle={styles.paginationDotActive}
+              loop
+              onProgressChange={paginationProgress}
+              onConfigurePanGesture={configureHorizontalCarouselPan}
+              renderItem={renderItem}
             />
-            <AppText variant="label" color="text3" style={styles.sectionHint}>{t("carouselCatalog.paginationHint")}</AppText>
           </View>
+          <Pagination.Basic
+            progress={paginationProgress}
+            data={carouselData}
+            horizontal
+            containerStyle={styles.paginationContainer}
+            dotStyle={styles.paginationDot}
+            activeDotStyle={styles.paginationDotActive}
+          />
+          <AppText variant="label" color="text3" style={styles.sectionHint}>
+            {t('carouselCatalog.paginationHint')}
+          </AppText>
+        </View>
 
-          <View>
-            <AppText variant="bodyLg" color="text1" style={styles.sectionTitle}>
-              {t("carouselCatalog.sectionPeek")}
-            </AppText>
-            <AppText variant="bodySm" color="text2" style={styles.caption}>
-              {t("carouselCatalog.sectionPeekCaption")}
-            </AppText>
-            <View
-              style={styles.carouselHost}
-              accessibilityRole="none"
-              accessibilityLabel={t("carouselCatalog.a11yPeek")}
-            >
-              <Carousel
-                width={peekItemWidth}
-                height={heightPeek}
-                data={carouselData}
-                loop
-                onConfigurePanGesture={configureHorizontalCarouselPan}
-                renderItem={renderItem}
-              />
-            </View>
-            <AppText variant="label" color="text3" style={styles.sectionHint}>{t("carouselCatalog.peekHint")}</AppText>
+        <View>
+          <AppText variant="bodyLg" color="text1" style={styles.sectionTitle}>
+            {t('carouselCatalog.sectionPeek')}
+          </AppText>
+          <AppText variant="bodySm" color="text2" style={styles.caption}>
+            {t('carouselCatalog.sectionPeekCaption')}
+          </AppText>
+          <View
+            style={styles.carouselHost}
+            accessibilityRole="none"
+            accessibilityLabel={t('carouselCatalog.a11yPeek')}
+          >
+            <Carousel
+              width={peekItemWidth}
+              height={heightPeek}
+              data={carouselData}
+              loop
+              onConfigurePanGesture={configureHorizontalCarouselPan}
+              renderItem={renderItem}
+            />
           </View>
+          <AppText variant="label" color="text3" style={styles.sectionHint}>
+            {t('carouselCatalog.peekHint')}
+          </AppText>
+        </View>
 
-          <View>
-            <AppText variant="bodyLg" color="text1" style={styles.sectionTitle}>
-              {t("carouselCatalog.sectionParallax")}
-            </AppText>
-            <AppText variant="bodySm" color="text2" style={styles.caption}>
-              {t("carouselCatalog.sectionParallaxCaption")}
-            </AppText>
-            <View
-              style={styles.carouselHost}
-              accessibilityRole="none"
-              accessibilityLabel={t("carouselCatalog.a11yParallax")}
-            >
-              <Carousel
-                width={fullWidth}
-                height={heightParallax}
-                mode="parallax"
-                modeConfig={{
-                  parallaxScrollingScale: 0.9,
-                  parallaxScrollingOffset: SpacingToken.spacing_value_12,
-                }}
-                data={carouselData}
-                loop
-                onConfigurePanGesture={configureHorizontalCarouselPan}
-                renderItem={renderItem}
-              />
-            </View>
+        <View>
+          <AppText variant="bodyLg" color="text1" style={styles.sectionTitle}>
+            {t('carouselCatalog.sectionParallax')}
+          </AppText>
+          <AppText variant="bodySm" color="text2" style={styles.caption}>
+            {t('carouselCatalog.sectionParallaxCaption')}
+          </AppText>
+          <View
+            style={styles.carouselHost}
+            accessibilityRole="none"
+            accessibilityLabel={t('carouselCatalog.a11yParallax')}
+          >
+            <Carousel
+              width={fullWidth}
+              height={heightParallax}
+              mode="parallax"
+              modeConfig={{
+                parallaxScrollingScale: 0.9,
+                parallaxScrollingOffset: SpacingToken.spacing_value_12,
+              }}
+              data={carouselData}
+              loop
+              onConfigurePanGesture={configureHorizontalCarouselPan}
+              renderItem={renderItem}
+            />
           </View>
+        </View>
 
-          <View>
-            <AppText variant="bodyLg" color="text1" style={styles.sectionTitle}>
-              {t("carouselCatalog.sectionStack")}
-            </AppText>
-            <AppText variant="bodySm" color="text2" style={styles.caption}>
-              {t("carouselCatalog.sectionStackCaption")}
-            </AppText>
-            <View
-              style={styles.carouselHost}
-              accessibilityRole="none"
-              accessibilityLabel={t("carouselCatalog.a11yStack")}
-            >
-              <Carousel
-                width={fullWidth}
-                height={heightStack}
-                mode="horizontal-stack"
-                modeConfig={{
-                  stackInterval: SpacingToken.spacing_value_5,
-                  scaleInterval: 0.07,
-                  opacityInterval: 0.08,
-                }}
-                data={carouselData}
-                loop
-                onConfigurePanGesture={configureHorizontalCarouselPan}
-                renderItem={renderItem}
-              />
-            </View>
+        <View>
+          <AppText variant="bodyLg" color="text1" style={styles.sectionTitle}>
+            {t('carouselCatalog.sectionStack')}
+          </AppText>
+          <AppText variant="bodySm" color="text2" style={styles.caption}>
+            {t('carouselCatalog.sectionStackCaption')}
+          </AppText>
+          <View
+            style={styles.carouselHost}
+            accessibilityRole="none"
+            accessibilityLabel={t('carouselCatalog.a11yStack')}
+          >
+            <Carousel
+              width={fullWidth}
+              height={heightStack}
+              mode="horizontal-stack"
+              modeConfig={{
+                stackInterval: SpacingToken.spacing_value_5,
+                scaleInterval: 0.07,
+                opacityInterval: 0.08,
+              }}
+              data={carouselData}
+              loop
+              onConfigurePanGesture={configureHorizontalCarouselPan}
+              renderItem={renderItem}
+            />
           </View>
+        </View>
 
-          <View>
-            <AppText variant="bodyLg" color="text1" style={styles.sectionTitle}>
-              {t("carouselCatalog.sectionVertical")}
-            </AppText>
-            <AppText variant="bodySm" color="text2" style={styles.caption}>
-              {t("carouselCatalog.sectionVerticalCaption")}
-            </AppText>
-            <View
-              style={styles.carouselHost}
-              accessibilityRole="none"
-              accessibilityLabel={t("carouselCatalog.a11yVertical")}
-            >
-              <Carousel
-                vertical
-                width={fullWidth}
-                height={VERTICAL_CAROUSEL_HEIGHT}
-                data={carouselData}
-                loop={false}
-                onConfigurePanGesture={configureVerticalCarouselPan}
-                renderItem={renderItem}
-              />
-            </View>
-            <AppText variant="label" color="text3" style={styles.sectionHint}>{t("carouselCatalog.verticalHint")}</AppText>
+        <View>
+          <AppText variant="bodyLg" color="text1" style={styles.sectionTitle}>
+            {t('carouselCatalog.sectionVertical')}
+          </AppText>
+          <AppText variant="bodySm" color="text2" style={styles.caption}>
+            {t('carouselCatalog.sectionVerticalCaption')}
+          </AppText>
+          <View
+            style={styles.carouselHost}
+            accessibilityRole="none"
+            accessibilityLabel={t('carouselCatalog.a11yVertical')}
+          >
+            <Carousel
+              vertical
+              width={fullWidth}
+              height={VERTICAL_CAROUSEL_HEIGHT}
+              data={carouselData}
+              loop={false}
+              onConfigurePanGesture={configureVerticalCarouselPan}
+              renderItem={renderItem}
+            />
           </View>
+          <AppText variant="label" color="text3" style={styles.sectionHint}>
+            {t('carouselCatalog.verticalHint')}
+          </AppText>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

@@ -53,7 +53,7 @@ export const linking: LinkingOptions<RootStackParamList> = {
             },
           },
           About: 'about',
-          CarouselCatalog: "carousel",
+          CarouselCatalog: 'carousel',
         },
       },
       ExampleModal: 'modal/presentation',

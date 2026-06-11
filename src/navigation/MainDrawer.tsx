@@ -67,10 +67,10 @@ export function MainDrawer() {
         options={{ title: t('drawer.aboutTitle') }}
       />
       <Drawer.Screen
-              name="CarouselCatalog"
-              component={CarouselCatalogScreen}
-              options={{ title: 'Carousel', drawerLabel: 'Carousel Catalog' }}
-            />
+        name="CarouselCatalog"
+        component={CarouselCatalogScreen}
+        options={{ title: 'Carousel', drawerLabel: 'Carousel Catalog' }}
+      />
     </Drawer.Navigator>
   );
 }
