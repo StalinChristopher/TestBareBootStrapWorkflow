@@ -1,0 +1,7 @@
+// Prod flavor — Debug build type
+#include? "../Pods/Target Support Files/Pods-TestBareBootStrapWorkflow/Pods-TestBareBootStrapWorkflow.debug-prod.xcconfig"
+
+ENVFILE=../.env.prod
+
+PRODUCT_NAME = TestBareBootStrapWorkflow
+PRODUCT_BUNDLE_IDENTIFIER = com.codeandtheory.templatepipelinetest
