@@ -1,0 +1,87 @@
+name: Daily Project Report
+
+on:
+  schedule:
+    - cron: "30 3 * * 1-5" # Mon-Fri 9:00 AM IST (03:30 UTC)
+  workflow_dispatch:
+
+jobs:
+  rovo-signal:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build schedule signal metadata
+        id: signal
+        env:
+          TARGET_PROJECT_KEY: ${{ vars.ROVO_TARGET_PROJECT_KEY || 'ABC' }}
+          TARGET_SLACK_CHANNEL: ${{ vars.ROVO_TARGET_SLACK_CHANNEL || '#channel-name' }}
+          ROVO_AUTOMATION_WEBHOOK_URL: ${{ secrets.ROVO_AUTOMATION_WEBHOOK_URL }}
+        run: |
+          echo "run_time_utc=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_OUTPUT"
+          echo "report_date_utc=$(date -u +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
+          echo "target_project_key=${TARGET_PROJECT_KEY}" >> "$GITHUB_OUTPUT"
+          echo "target_slack_channel=${TARGET_SLACK_CHANNEL}" >> "$GITHUB_OUTPUT"
+          if [ -n "${ROVO_AUTOMATION_WEBHOOK_URL}" ]; then
+            echo "webhook_configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "webhook_configured=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Signal Atlassian automation webhook
+        env:
+          ROVO_AUTOMATION_WEBHOOK_URL: ${{ secrets.ROVO_AUTOMATION_WEBHOOK_URL }}
+          ROVO_AUTOMATION_WEBHOOK_TOKEN: ${{ secrets.ROVO_AUTOMATION_WEBHOOK_TOKEN }}
+          REPORT_DATE_UTC: ${{ steps.signal.outputs.report_date_utc }}
+          RUN_TIME_UTC: ${{ steps.signal.outputs.run_time_utc }}
+          TARGET_PROJECT_KEY: ${{ steps.signal.outputs.target_project_key }}
+          TARGET_SLACK_CHANNEL: ${{ steps.signal.outputs.target_slack_channel }}
+        run: |
+          if [ -z "${ROVO_AUTOMATION_WEBHOOK_URL}" ]; then
+            echo "ROVO_AUTOMATION_WEBHOOK_URL is not configured; skipping webhook signal."
+            exit 0
+          fi
+          payload=$(cat <<EOF
+          {
+            "report_date": "${REPORT_DATE_UTC}",
+            "run_time_utc": "${RUN_TIME_UTC}",
+            "project_key": "${TARGET_PROJECT_KEY}",
+            "slack_channel": "${TARGET_SLACK_CHANNEL}",
+            "request_source": "github_actions_daily_schedule",
+            "prompt_hint": "Create a same-day crisp executive end-of-day status report for Jira project ${TARGET_PROJECT_KEY} and Slack channel ${TARGET_SLACK_CHANNEL}, suitable for Confluence."
+          }
+          EOF
+          )
+          if [ -n "${ROVO_AUTOMATION_WEBHOOK_TOKEN}" ]; then
+            curl --fail --show-error --silent \
+              -X POST \
+              -H "Content-Type: application/json" \
+              -H "X-Automation-Webhook-Token: ${ROVO_AUTOMATION_WEBHOOK_TOKEN}" \
+              --data "${payload}" \
+              "${ROVO_AUTOMATION_WEBHOOK_URL}"
+          else
+            echo "ROVO_AUTOMATION_WEBHOOK_TOKEN not configured; sending webhook without token header."
+            curl --fail --show-error --silent \
+              -X POST \
+              -H "Content-Type: application/json" \
+              --data "${payload}" \
+              "${ROVO_AUTOMATION_WEBHOOK_URL}"
+          fi
+
+      - name: Write run summary
+        env:
+          ROVO_WEBHOOK_CONFIGURED: ${{ steps.signal.outputs.webhook_configured }}
+        run: |
+          {
+            echo "## Daily ROVO orchestration"
+            echo ""
+            echo "- Trigger time (UTC): ${{ steps.signal.outputs.run_time_utc }}"
+            echo "- Target Jira project: ${{ steps.signal.outputs.target_project_key }}"
+            echo "- Target Slack channel: ${{ steps.signal.outputs.target_slack_channel }}"
+            echo "- Webhook configured: ${ROVO_WEBHOOK_CONFIGURED}"
+            echo ""
+            echo "This workflow now acts as a scheduler/signal layer."
+            echo "ROVO report generation and distribution are handled in Atlassian automation."
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,8 @@
+{
+  "jira_project_key": "ROC",
+  "slack_channel": "#test-reporting-agent",
+  "schedule_cron": "30 3 * * 1-5",
+  "team_name": "",
+  "repo_url": "https://github.com/StalinChristopher/TestBareBootStrapWorkflow.git",
+  "template_commit": "6c4a768"
+}
